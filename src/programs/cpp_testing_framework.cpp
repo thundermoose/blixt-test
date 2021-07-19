@@ -3,29 +3,31 @@
 #include "../test/test.hh"
 #include <unistd.h>
 
-
-new_test(simple_test,
+auto simple_test_body = 
 	 [](){
-	 std :: cout << "Inside simple_test" << std::endl;
-	 });
+		 std :: cout << "Inside simple_test" << std::endl;
+	 };
+new_test(simple_test, simple_test_body);
 
-new_test(catching_segfault,
+auto catching_segfault_body =
 	 [](){
-	 int *null_pointer = NULL;
-	 *null_pointer = 0;
-	 });
+		 int *null_pointer = NULL;
+		 *null_pointer = 0;
+	 };
+new_test(catching_segfault, catching_segfault_body);
 
 
-
-new_test(throwing_exception,
+auto throwing_exception_body =
 	 [](){
 		throw std::runtime_error("Just a test");
-	 });
+	 };
+new_test(throwing_exception, throwing_exception_body);
 
-new_test(assertion_test,
+auto assertion_test_body = 
 	 [](){
 		assert_that(4!=4);
-	 });
+	 };
+new_test(assertion_test,assertion_test_body);
 
 int main()
 {
