@@ -31,7 +31,7 @@ test_program_names := $(program_source_files:$(source_path)/programs/%.cpp=./tes
 shared_object := libcpptestingframework.so
 
 all: compiler_flags+=-DNDEBUG -DNLOGING
-all: $(mode_path)/release.mode
+all: $(mode_path)/release.mode $(header_files)
 	make release/lib/$(shared_object)
 	make release/include/test.hh
 
@@ -73,10 +73,10 @@ release/lib/%.so: $(function_object_files)
 	mkdir -p $(@D)
 	$(linker) -shared -o $@ $^
 
-release/include/test.hh:
+release/include/test.hh: $(source_path)/test/test.hh
 	echo "Coping header file: $@"
 	mkdir -p $(@D)
-	mv $(source_path)/test/test.hh $@
+	cp $< $@
 
 test/%.x: linker_flags+=$(thundertester_linker_flags)
 test/%.x: compiler_flags+=-ggdb $(thundertester_compiler_flags) -DTEST_DATA="\"./test_data/\""
