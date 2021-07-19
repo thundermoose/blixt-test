@@ -32,8 +32,30 @@ and
 ```cpp
 assert_that(condition);
 ```
-The first macro `new_test`{:.language-cpp} takes the name of the test and a function containig
+The first macro `new_test` takes the name of the test and a function containig
 the test code. The name should not be a string, but be formated in the same
 way as a variable or function name (since it is used to create a variable 
 internally). The test_function can either be a lambda function or any 
-object overloading `operator ()`{:.language-cpp}
+object overloading `operator ()`. 
+# Example
+This illustrated by the following simple
+code:
+```cpp
+#include <cpptestframework/test.h>
+
+int gcd(int a, int b)
+{
+	return b == 0 ? a : gcd(b,a%b);
+}
+
+new_test(gcd_9_15_is_3,
+	 []()
+	 {
+	 	assert_that(gcd(9,15) == 3);
+	 });
+
+```
+
+# Turning tests of
+To quickly turn of all tests in your code compile the code with the `NDEBUG`
+macro defined.
