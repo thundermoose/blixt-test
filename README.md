@@ -30,7 +30,6 @@ new_test(test_name,test_function);
 ```
 and
 ```c++
-assert_that(test)
+assert_that(condition);
 ```
-
-
+The first macro `new_test`{:.c++}
