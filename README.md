@@ -32,4 +32,4 @@ and
 ```c++
 assert_that(condition);
 ```
-The first macro `new_test`{:.c++}
+The first macro `new_test`{:.language-c++ .highlihgt}
