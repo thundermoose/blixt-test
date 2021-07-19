@@ -8,69 +8,100 @@
 #include <string>
 #include <unistd.h>
 
-class test_assertion_failed :
-	public std::exception
+namespace tests
 {
-	public:
-		test_assertion_failed(std::string assertion_description);
-		~test_assertion_failed() = default;
-		const char* what() const noexcept;
-	private:
-		std::string assertion_description;
-};
-
-class register_test
-{
-	public:
-template<typename TEST_FUNCTION>
-	register_test(TEST_FUNCTION test_function,std::string test_name) :
-		test_name(test_name)
+	/*
+	   The following exception is thrown when ever a test fails due to an 
+	   assertion.
+	 */
+	class test_assertion_failed :
+		public std::exception
 	{
-		initialize_test();
-		test_pid = fork();
-		if (test_pid == 0)
+		public:
+			test_assertion_failed(std::string assertion_description);
+			~test_assertion_failed() = default;
+			const char* what() const noexcept;
+		private:
+			std::string assertion_description;
+	};
+
+	/*
+	   This class represents a test.
+	 */
+	class test
+	{
+		public:
+			template<typename TEST_FUNCTION>
+				test(TEST_FUNCTION test_function,
+					      std::string test_name,
+					      std::string test_file) :
+					test_name(test_name),
+					test_file(test_file)
 		{
-			try 
+			initialize_test();
+			if (should_run)
 			{
-				test_function();
+				test_pid = fork();
+				if (test_pid == 0)
+				{
+					try 
+					{
+						test_function();
+					}
+					catch (const test_assertion_failed &assertion)
+					{
+						test_process_failed_at_assetion(assertion);	
+					}
+					catch (const std::exception &exception)
+					{
+						test_process_failed_with_exception(exception);
+					}
+					test_process_succeded();
+				}	
+				else
+					generate_test_report();
 			}
-			catch (const test_assertion_failed &assertion)
-			{
-				test_process_failed_at_assetion(assertion);	
-			}
-			catch (const std::exception &exception)
-			{
-				test_process_failed_with_exception(exception);
-			}
-			test_process_succeded();
-		}	
-		else
-			generate_test_report();
-	}
-	private:
-		void initialize_test();
-		void generate_test_report();
-		void test_process_failed_with_exception(const std::exception &exception);
-		void test_process_failed_at_assetion(const test_assertion_failed &exception);
-		void test_process_succeded();
-		pid_t test_pid;	
-		int test_pipe[2];
-		std::string test_name;
-};
+		}
+			static void set_command_arguments(int num_arguments,
+							  char **argument_list);
+		private:
+			void initialize_test();
+			void parse_argument_list();
+			void generate_test_report();
+			void test_process_failed_with_exception(const std::exception &exception);
+			void test_process_failed_at_assetion(const test_assertion_failed &exception);
+			void test_process_succeded();
+			static void display_help_text();
+			pid_t test_pid;	
+			int test_pipe[2];
+			std::string test_name;
+			std::string test_file;
+			static int num_arguments;
+			static char **argument_list;
+			bool should_run;
+	};
+}
 
 #ifndef NDEBUG
-#define new_test(name,test_function...) register_test name(test_function,\
-							   std::string(#name))
+#define new_test(name,test_function...) tests::test name(test_function,\
+							 std::string(#name),\
+							 std::string(__FILE__))
 
 #define assert_that(test) \
 	if (!(test)) \
-		throw test_assertion_failed(#test);
+		throw tests::test_assertion_failed(#test);
 
-
+namespace tests
+{
+	__attribute__((constructor(101)))
+		extern void initialize_test_environment(int num_arguments, 
+							char **argument_list);
+}
 #else
 
 #define new_test(name,test_function...)
 
+#define assert_that(test) 
 #endif
 
 #endif

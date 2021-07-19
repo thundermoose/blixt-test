@@ -8,7 +8,11 @@ ifndef linker
 linker := g++ -std=c++20 -Wall -Werror
 endif
 
-compiler_flags := -I./src -ggdb 
+ifndef install_path
+install_path := /usr/local/
+endif
+
+compiler_flags := -I./src -ggdb -fPIC
 linker_flags := -lm
 
 source_path := src
@@ -17,21 +21,33 @@ object_path := .tmp/objects
 dependencies_path := .tmp/dependencies
 
 all_source_files := $(shell find $(source_path) -regex [^\#]*\\.cpp$)
+header_files := $(shell find $(source_path) -regex [^\#]*\\.hh$)
 program_source_files := $(filter $(source_path)/programs/%.cpp,$(all_source_files))
 function_source_files := $(filter-out $(source_path)/programs/%.cpp $(source_path)/tests/%.cpp,$(all_source_files))
 function_object_files := $(function_source_files:$(source_path)/%.cpp=$(object_path)/%.o)
 dependencies_files := $(all_source_files:$(source_path)/%.cpp=$(dependencies_path)/%.d)
 program_names := $(program_source_files:$(source_path)/programs/%.cpp=./release/%.x)
 test_program_names := $(program_source_files:$(source_path)/programs/%.cpp=./test/%.x)
+shared_object := libcpptestingframework.so
 
 all: compiler_flags+=-DNDEBUG -DNLOGING
 all: $(mode_path)/release.mode
-	make $(program_names)
+	make release/lib/$(shared_object)
+	make release/include/test.hh
+
+install:
+	mkdir -p $(install_path)/{lib,include/cpptestingframework}
+	cp release/lib/$(shared_object) $(install_path)/lib/
+	cp release/include/*.hh $(install_path)/include/cpptestingframework/
+
+uninstall:
+	rm $(install_path)/lib/$(shared_object)
+	rm -r $(install_path)/include/cpptestingframework
 
 test: $(mode_path)/test.mode
 	make $(test_program_names)
 
-.PRECIOUS: $(dependencies_files) $(function_object_files)
+.PRECIOUS: $(dependencies_files) $(function_object_files) $(header_files)
 
 clear:
 	echo "Cleaning up"
@@ -50,6 +66,17 @@ release/%.x: $(object_path)/programs/%.o $(function_object_files)
 	echo "Linking: $@"
 	mkdir -p $(@D)
 	$(linker) -o $(@) $^ $(linker_flags)
+
+release/lib/%.so: compiler_flags+=-O3
+release/lib/%.so: $(function_object_files)
+	echo "Linking shared object: $@"
+	mkdir -p $(@D)
+	$(linker) -shared -o $@ $^
+
+release/include/test.hh:
+	echo "Coping header file: $@"
+	mkdir -p $(@D)
+	mv $(source_path)/test/test.hh $@
 
 test/%.x: linker_flags+=$(thundertester_linker_flags)
 test/%.x: compiler_flags+=-ggdb $(thundertester_compiler_flags) -DTEST_DATA="\"./test_data/\""
