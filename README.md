@@ -25,11 +25,15 @@ user desires.
 ## Usage
 
 There are two macros to create tests,
-```c++
+```cpp
 new_test(test_name,test_function);
 ```
 and
-```c++
+```cpp
 assert_that(condition);
 ```
-The first macro `new_test`{:.language-c++ .highlihgt}
+The first macro `new_test`{:.cpp} takes the name of the test and a function containig
+the test code. The name should not be a string, but be formated in the same
+way as a variable or function name (since it is used to create a variable 
+internally). The test_function can either be a lambda function or any 
+object overloading `operator ()`{:.cpp}
