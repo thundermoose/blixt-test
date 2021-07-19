@@ -1,4 +1,4 @@
-### C++ Testing Framework
+# C++ Testing Framework
 
 This is a C++ testing framework, intended to be simple to use, yet powerfull.
 Only two simple macros are needed in addition to linking your program to
@@ -37,7 +37,7 @@ the test code. The name should not be a string, but be formated in the same
 way as a variable or function name (since it is used to create a variable 
 internally). The test_function can either be a lambda function or any 
 object overloading `operator ()`. 
-# Example
+### Example
 This illustrated by the following simple
 code:
 ```cpp
@@ -56,6 +56,6 @@ new_test(gcd_9_15_is_3,
 
 ```
 
-# Turning tests of
+### Turning tests of
 To quickly turn of all tests in your code compile the code with the `NDEBUG`
 macro defined.
