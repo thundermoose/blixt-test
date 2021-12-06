@@ -106,7 +106,9 @@ namespace tests
 				<< std::endl;
 			if (WEXITSTATUS(test_status) == 255)
 				std::cerr << "With exception " 
+					<< "\"" 
 					<< buffer 
+					<< "\"" 
 					<< std::endl;
 			else if (WEXITSTATUS(test_status) == 254)
 				std::cerr << "At assertion "
