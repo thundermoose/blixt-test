@@ -56,6 +56,11 @@ new_test(assertion_test)
 	assert_that(4!=4);
 }
 
+new_test(non_zero_exit_status)
+{
+	exit(EXIT_FAILURE);
+}
+
 int main()
 {
 	/* This main body is used to check what PID the mother process has.

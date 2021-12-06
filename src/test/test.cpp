@@ -5,6 +5,29 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+static
+bool timedout_read(int file_descriptor, char *buffer, size_t buffer_size)
+{
+	fd_set read_file_descriptor;
+	FD_ZERO(&read_file_descriptor);
+	FD_SET(file_descriptor,&read_file_descriptor);
+	struct timeval timeout;
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 10000;
+	int status = select(file_descriptor+1,
+			    &read_file_descriptor,
+			    NULL,
+			    NULL,
+			    &timeout);
+	if (status <= 0)
+		return false;
+	else
+	{
+		read(file_descriptor,buffer,buffer_size);
+		return true;
+	}
+}
+
 namespace tests
 {
 	int test::num_arguments = 0;
@@ -98,22 +121,31 @@ namespace tests
 		}
 		else if (WIFEXITED(test_status))
 		{
-			char buffer[8192];
-			read(test_pipe[0],buffer,8192);
 			std::cerr << "Test " 
 				<< test_name 
 				<< " failed" 
 				<< std::endl;
-			if (WEXITSTATUS(test_status) == 255)
-				std::cerr << "With exception " 
-					<< "\"" 
-					<< buffer 
-					<< "\"" 
+			char buffer[8192];
+			if (timedout_read(test_pipe[0],buffer,8192))
+			{
+				if (WEXITSTATUS(test_status) == 255)
+					std::cerr << "With exception " 
+						<< "\"" 
+						<< buffer 
+
+						<< "\"" 
+						<< std::endl;
+				else if (WEXITSTATUS(test_status) == 254)
+					std::cerr << "At assertion "
+						<< buffer
+						<< std::endl;
+			}
+			else
+			{
+				std::cerr << "With exit status "
+					<< test_status
 					<< std::endl;
-			else if (WEXITSTATUS(test_status) == 254)
-				std::cerr << "At assertion "
-					<< buffer
-					<< std::endl;
+			}
 		}
 		else if (WIFSIGNALED(test_status))
 		{
