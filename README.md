@@ -20,23 +20,38 @@ To install cpp_testing_framework to `$HOME/.local` run the following commands:
 >> make install install_path=$HOME/.local/
 ```
 By changing `install_path` it is possible to install it to where every they
-user desires.
+user desires. Not including `ìnstall_path` it will be automatically be set 
+to `/usr/local/`.
 
 ## Usage
 
 There are two macros to create tests,
 ```cpp
-new_test(test_name,test_function);
+new_test(test_name/*Write your tests name here*/)
+{
+	// Write your test code here
+}
 ```
 and
 ```cpp
 assert_that(condition);
 ```
-The first macro `new_test` takes the name of the test and a function containig
-the test code. The name should not be a string, but be formated in the same
-way as a variable or function name (since it is used to create a variable 
-internally). The test_function can either be a lambda function or any 
-object overloading `operator ()`. 
+The first macro `new_test` takes the name of the test and the test code is then
+written in a normal code block after, similar to in a function implementation. 
+The name should not be a string, but be formated in the same way as a variable 
+or function name (since it is used to create a variable 
+internally). 
+
+The `assert_that` macro takes a conditional and allows you to test the result 
+of your test body. If an assertion fails 
+
+Once your program is compiled and runned, by default all tests will be executed 
+before the main function. However, there are 4 command line flags included:
+- `--help-test` shows a basic usage message listing all 4 flags.
+- `--list-tests` lists all test with name and in what .cpp file they are located.
+- `--run-test <test_name>` runs the test specified by `<test_name>` and possibly other tests specified with this flag. 
+- `--run-tests-in <file_name>` runs all test located in the source file specified by `<file_name>`.
+
 ### Example
 This illustrated by the following simple
 code:
@@ -48,12 +63,10 @@ int gcd(int a, int b)
 	return b == 0 ? a : gcd(b,a%b);
 }
 
-new_test(gcd_9_15_is_3,
-	 []()
-	 {
-	 	assert_that(gcd(9,15) == 3);
-	 });
-
+new_test(gcd_9_15_is_3)
+{
+	assert_that(gcd(9,15) == 3);
+}
 ```
 
 ### Turning tests of
