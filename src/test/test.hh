@@ -83,9 +83,12 @@ namespace tests
 }
 
 #ifndef NDEBUG
-#define new_test(name,test_function...) tests::test name(test_function,\
-							 std::string(#name),\
-							 std::string(__FILE__))
+#define new_test(name) \
+	void test_function_##name();\
+	tests::test name(test_function_##name,\
+			 std::string(#name),\
+			 std::string(__FILE__));\
+	void test_function_##name()
 
 #define assert_that(test) \
 	if (!(test)) \
@@ -99,7 +102,9 @@ namespace tests
 }
 #else
 
-#define new_test(name,test_function...)
+#define new_test(name)\
+	__attribute__((unused))\
+	void test_function_#name()
 
 #define assert_that(test) 
 #endif
