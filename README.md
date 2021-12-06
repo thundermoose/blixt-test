@@ -51,7 +51,9 @@ before the main function. However, there are 4 command line flags included:
 - `--list-tests` lists all test with name and in what .cpp file they are located.
 - `--run-test <test_name>` runs the test specified by `<test_name>` and possibly other tests specified with this flag. 
 - `--run-tests-in <file_name>` runs all test located in the source file specified by `<file_name>`.
-
+The last flag, `--run-tests-in` allows the user to setup specific test suits,
+by simply keeping all tests that belong to a single test suit in the same 
+source file.
 ### Example
 This illustrated by the following simple
 code:
