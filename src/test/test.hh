@@ -68,8 +68,10 @@ namespace tests
 			void initialize_test();
 			void parse_argument_list();
 			void generate_test_report();
-			void test_process_failed_with_exception(const std::exception &exception);
-			void test_process_failed_at_assetion(const test_assertion_failed &exception);
+			void test_process_failed_with_exception(
+					const std::exception &exception);
+			void test_process_failed_at_assetion(
+					const test_assertion_failed &exception);
 			void test_process_succeded();
 			static void display_help_text();
 			pid_t test_pid;	
