@@ -85,13 +85,23 @@ namespace tests
 }
 
 #ifndef NDEBUG
+/**
+ * @brief Macro to create a new named test. The body of the test is written as a 
+ * normal code block following the macro
+ * 
+ * @param name is the name of the test. The name parameter should not be a 
+ * string.
+ *
+ * @example simple_test.cpp
+ */
 #define new_test(name) \
 	void test_function_##name();\
 	tests::test name(test_function_##name,\
 			 std::string(#name),\
 			 std::string(__FILE__));\
 	void test_function_##name()
-
+/**
+ */
 #define assert_that(test) \
 	if (!(test)) \
 		throw tests::test_assertion_failed(#test);
