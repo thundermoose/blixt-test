@@ -1,4 +1,4 @@
-# C++ Testing Framework
+# Blixt-Test
 
 This is a C++ testing framework, intended to be simple to use, yet powerfull.
 Only two simple macros are needed in addition to linking your program to
@@ -14,8 +14,8 @@ any waranty.
 
 To install cpp_testing_framework to `$HOME/.local` run the following commands:
 ```
->> git clone git@github.com:thundermoose/cpp_testing_framework.git
->> cd cpp_testing_framework
+>> git clone git@github.com:thundermoose/blixt-test.git
+>> cd blixt-test
 >> make 
 >> make install install_path=$HOME/.local/
 ```
@@ -27,7 +27,7 @@ to `/usr/local/`.
 
 There are two macros to create tests,
 ```cpp
-new_test(test_name/*Write your tests name here*/)
+new_test(/*Write your tests name here*/)
 {
 	// Write your test code here
 }
@@ -58,7 +58,7 @@ source file.
 This illustrated by the following simple
 code:
 ```cpp
-#include <cpptestframework/test.h>
+#include <blixttest/test.h>
 
 int gcd(int a, int b)
 {

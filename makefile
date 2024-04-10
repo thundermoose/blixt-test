@@ -28,7 +28,7 @@ function_object_files := $(function_source_files:$(source_path)/%.cpp=$(object_p
 dependencies_files := $(all_source_files:$(source_path)/%.cpp=$(dependencies_path)/%.d)
 program_names := $(program_source_files:$(source_path)/programs/%.cpp=./release/%.x)
 test_program_names := $(program_source_files:$(source_path)/programs/%.cpp=./test/%.x)
-shared_object := libcpptestingframework.so
+shared_object := libblixttest.so
 
 all: compiler_flags+=-DNDEBUG -DNLOGING
 all: $(mode_path)/release.mode $(header_files)
@@ -37,13 +37,13 @@ all: $(mode_path)/release.mode $(header_files)
 
 install:
 	mkdir -p $(install_path)/lib
-	mkdir -p $(install_path)/include/cpptestingframework
+	mkdir -p $(install_path)/include/blixttest
 	cp release/lib/$(shared_object) $(install_path)/lib/
-	cp release/include/*.hh $(install_path)/include/cpptestingframework/
+	cp release/include/*.hh $(install_path)/include/blixttest/
 
 uninstall:
 	rm $(install_path)/lib/$(shared_object)
-	rm -r $(install_path)/include/cpptestingframework
+	rm -r $(install_path)/include/blixttest
 
 test: $(mode_path)/test.mode
 	make $(test_program_names)
