@@ -23,7 +23,10 @@ bool timedout_read(int file_descriptor, char *buffer, size_t buffer_size)
 		return false;
 	else
 	{
-		read(file_descriptor,buffer,buffer_size);
+		if (read(file_descriptor,buffer,buffer_size) < 0) {
+			std::cerr << "timedout_read::Could not read to buffer" 
+				<< std::endl;
+		}
 		return true;
 	}
 }
@@ -170,7 +173,9 @@ namespace tests
 						   exception &exception)
 	{
 		const char *message = exception.what();
-		write(test_pipe[1],message,strlen(message)+1);
+		if (write(test_pipe[1], message, strlen(message)+1) < 0) {
+			std::cerr << "Couldn't send message from exception" << std::endl;
+		}
 		close(test_pipe[1]);
 		exit(-1);
 	}
@@ -180,7 +185,9 @@ namespace tests
 						&assertion)
 	{
 		const char *message = assertion.what();
-		write(test_pipe[1],message,strlen(message)+1);
+		if (write(test_pipe[1], message, strlen(message)+1) < 0) {
+			std::cerr << "Couldn't send message from assertion" << std::endl;	
+		}
 		close(test_pipe[1]);
 		exit(-2);
 	}
