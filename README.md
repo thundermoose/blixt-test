@@ -13,7 +13,7 @@ any waranty.
 ## Installation
 
 To install cpp_testing_framework to `$HOME/.local` run the following commands:
-```
+```bash
 >> git clone git@github.com:thundermoose/blixt-test.git
 >> cd blixt-test
 >> make 
