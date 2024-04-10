@@ -9,7 +9,7 @@ linker := g++ -std=c++20 -Wall -Werror
 endif
 
 ifndef install_path
-install_path := /usr/local/
+install_path := /usr/local
 endif
 
 compiler_flags := -I./src -ggdb -fPIC
@@ -36,7 +36,8 @@ all: $(mode_path)/release.mode $(header_files)
 	make release/include/test.hh
 
 install:
-	mkdir -p $(install_path)/{lib,include/cpptestingframework}
+	mkdir -p $(install_path)/lib
+	mkdir -p $(install_path)/include/cpptestingframework
 	cp release/lib/$(shared_object) $(install_path)/lib/
 	cp release/include/*.hh $(install_path)/include/cpptestingframework/
 
@@ -46,6 +47,9 @@ uninstall:
 
 test: $(mode_path)/test.mode
 	make $(test_program_names)
+
+documentation: doxygen.conf $(all_source_files)
+	doxygen $<
 
 .PRECIOUS: $(dependencies_files) $(function_object_files) $(header_files)
 
