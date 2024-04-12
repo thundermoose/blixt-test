@@ -106,7 +106,7 @@ initialize_test_environment(int num_arguments, char **argument_list);
 }
 #else
 
-#define new_test(name) __attribute__((unused)) void test_function_ #name()
+#define new_test(name) [[maybe_unused]] void test_function_##name()
 
 #define assert_that(test)
 #endif

@@ -31,15 +31,17 @@ test_program_names := $(program_source_files:$(source_path)/programs/%.cpp=./tes
 shared_object := libblixttest.so
 
 all: compiler_flags+=-DNDEBUG -DNLOGING
-all: $(mode_path)/release.mode $(header_files)
+all: $(mode_path)/release.mode $(header_files) documentation
 	make release/lib/$(shared_object)
 	make release/include/test.hh
 
 install:
 	mkdir -p $(install_path)/lib
 	mkdir -p $(install_path)/include/blixttest
+	mkdir -p $(install_path)/share/man/man3
 	cp release/lib/$(shared_object) $(install_path)/lib/
 	cp release/include/*.hh $(install_path)/include/blixttest/
+	
 
 uninstall:
 	rm $(install_path)/lib/$(shared_object)
