@@ -16,7 +16,7 @@ any waranty.
 Blixt-test has the following requirements:
 - Posix compliant system. Blixt-test uses Posix library features to handle
 	multiprocessing and pipelining.
-- Blixt-test has only been tested with g++, but might also work with clang
+- Blixt-test has only been tested with g++, but might also work with clang.
 - For documentation Blixt-test uses doxygen.
 
 ## Installation
