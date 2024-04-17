@@ -53,6 +53,14 @@ before the main function. However, there are 4 command line flags included:
 The last flag, `--run-tests-in` allows the user to setup specific test suits,
 by simply keeping all tests that belong to a single test suit in the same 
 source file.
+
+### Compiler and Linker flags
+
+Blixt-test is compatible with `pkg-config`. If `PKG_CONFIG_PATH` contains 
+`$install_path/share/pkgconfig` compiler flags for building with blixt-test 
+can be obtained by `pkg-config -cflags blixt-test` and linker flags by 
+`pkg-config -libs blixt-test`.
+
 ### Example
 This illustrated by the following simple
 code:
