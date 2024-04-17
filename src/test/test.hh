@@ -8,7 +8,7 @@
 #include <string>
 #include <unistd.h>
 
-namespace tests {
+namespace blixt {
 /*
    The following exception is thrown when ever a test fails due to an
    assertion.
@@ -72,7 +72,7 @@ class test {
         static char **argument_list;
         bool should_run;
 };
-} // namespace tests
+} // namespace blixt
 
 #ifndef NDEBUG
 /**
@@ -86,7 +86,7 @@ class test {
  */
 #define new_test(name)                                                         \
         void test_function_##name();                                           \
-        tests::test name(test_function_##name, std::string(#name),             \
+        blixt::test name(test_function_##name, std::string(#name),             \
                          std::string(__FILE__));                               \
         void test_function_##name()
 
@@ -98,9 +98,9 @@ class test {
  */
 #define assert_that(test)                                                      \
         if (!(test))                                                           \
-                throw tests::test_assertion_failed(#test);
+                throw blixt::test_assertion_failed(#test);
 
-namespace tests {
+namespace blixt {
 __attribute__((constructor(101))) extern void
 initialize_test_environment(int num_arguments, char **argument_list);
 }
