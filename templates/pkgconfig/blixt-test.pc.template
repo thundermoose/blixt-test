@@ -1,0 +1,10 @@
+prefix=<prefix>
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: blixt-test
+Description: Blixt-test a simple testing framework
+Version: <version>
+CFlags: -I${includedir}/blixttest
+Libs: -L${libdir} -lblixttest

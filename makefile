@@ -1,4 +1,4 @@
-.SILENT:
+#.SILENT:
 -include makefile.local
 ifndef compiler
 compiler := g++ -std=c++20 -Wall -Werror -c
@@ -11,6 +11,9 @@ endif
 ifndef install_path
 install_path := /usr/local
 endif
+install_path_escaped := $(shell tools/escape.sh $(install_path))
+
+version=1.0
 
 compiler_flags := -I./src -ggdb -fPIC
 linker_flags := -lm
@@ -29,23 +32,27 @@ dependencies_files := $(all_source_files:$(source_path)/%.cpp=$(dependencies_pat
 program_names := $(program_source_files:$(source_path)/programs/%.cpp=./release/%.x)
 test_program_names := $(program_source_files:$(source_path)/programs/%.cpp=./test/%.x)
 shared_object := libblixttest.so
+config := pkgconfig/blixt-test.pc
 
 all: compiler_flags+=-DNDEBUG -DNLOGING
 all: $(mode_path)/release.mode $(header_files) documentation
 	make release/lib/$(shared_object)
 	make release/include/test.hh
+	make release/$(config)
 
 install:
 	mkdir -p $(install_path)/lib
 	mkdir -p $(install_path)/include/blixttest
-	mkdir -p $(install_path)/share/man/man3
+	mkdir -p $(install_path)/pkgconfig
 	cp release/lib/$(shared_object) $(install_path)/lib/
 	cp release/include/*.hh $(install_path)/include/blixttest/
+	cp release/$(config) $(install_path)/$(config)
 	
 
 uninstall:
 	rm $(install_path)/lib/$(shared_object)
 	rm -r $(install_path)/include/blixttest
+	rm -rf $(install_path)/$(config)
 
 test: $(mode_path)/test.mode
 	make $(test_program_names)
@@ -53,15 +60,15 @@ test: $(mode_path)/test.mode
 documentation: doxygen.conf $(all_source_files)
 	doxygen $<
 
-.PRECIOUS: $(dependencies_files) $(function_object_files) $(header_files)
+.PRECIOUS: $(dependencies_files) $(function_object_files) $(header_files) release/$(config)
 
-clear:
+clean:
 	echo "Cleaning up"
 	rm -rf ./.tmp/
 	rm -rf ./release/
 	rm -rf ./test/
 
-$(mode_path)/%.mode: 
+$(mode_path)/%.mode:
 	echo "Generating: $@"
 	rm -rf ./.tmp/
 	mkdir -p $(@D)
@@ -102,3 +109,6 @@ $(dependencies_path)/%.d: $(source_path)/%.cpp
 	mkdir -p $(@D)
 	$(compiler) -o /dev/null -M -MF $@ -MT $(@:$(dependencies_path)/%.d=$(object_path)/%.o) $< $(compiler_flags)
 
+release/$(config): templates/$(config).template
+	mkdir -p $(@D)
+	sed "s/<prefix>/$(install_path_escaped)/g" $< | sed "s/<version>/$(version)/g" > $@

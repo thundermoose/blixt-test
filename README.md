@@ -2,7 +2,7 @@
 
 This is a C++ testing framework, intended to be simple to use, yet powerfull.
 Only two simple macros are needed in addition to linking your program to
-this package.
+this package. I targets the 
 
 ## License
 
@@ -20,8 +20,7 @@ make
 make install install_path=$HOME/.local/
 ```
 By changing `install_path` it is possible to install it to where every they
-user desires. Not including `ìnstall_path` it will be automatically be set 
-to `/usr/local/`.
+user desires. The default value of `ìnstall_path` is `/usr/local/`.
 
 ## Usage
 
