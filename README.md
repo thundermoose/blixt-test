@@ -11,6 +11,14 @@ This software is release under GPLv2. For more details see [LICENSE](LICENSE).
 However, as required, this software comes with out any guarantee to work or
 any waranty.
 
+## Requirements
+
+Blixt-test has the following requirements:
+- Posix compliant system. Blixt-test uses Posix library features to handle
+	multiprocessing and pipelining.
+- Blixt-test has only been tested with g++, but might also work with clang
+- For documentation Blixt-test uses doxygen.
+
 ## Installation
 
 To install cpp_testing_framework to `$HOME/.local` run the following commands:
