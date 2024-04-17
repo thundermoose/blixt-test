@@ -2,7 +2,8 @@
 
 This is a C++ testing framework, intended to be simple to use, yet powerfull.
 Only two simple macros are needed in addition to linking your program to
-this package. I targets the 
+this package. I targets small to medium large hobby projects, where simplicity 
+is more important than feature richness. 
 
 ## License
 
