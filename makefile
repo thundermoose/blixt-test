@@ -43,10 +43,10 @@ all: $(mode_path)/release.mode $(header_files) documentation
 install:
 	mkdir -p $(install_path)/lib
 	mkdir -p $(install_path)/include/blixttest
-	mkdir -p $(install_path)/pkgconfig
+	mkdir -p $(install_path)/share/pkgconfig
 	cp release/lib/$(shared_object) $(install_path)/lib/
 	cp release/include/*.hh $(install_path)/include/blixttest/
-	cp release/$(config) $(install_path)/$(config)
+	cp release/$(config) $(install_path)/share/$(config)
 	
 
 uninstall:
